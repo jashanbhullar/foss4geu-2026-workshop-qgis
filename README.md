@@ -2,6 +2,11 @@
 
 ## Workshop Goal
 
+Demo data package:
+
+- Download the workshop sample data from <https://drive.google.com/file/d/1WvRVhR0BgKlhZuF5ebjVwKEUphy8UP8u/view?usp=sharing>
+- Use it for both the Model Designer and plugin demos so attendees follow the same layers throughout the workshop.
+
 Help attendees understand two practical ways to automate GIS workflows in QGIS:
 
 - QGIS Model Designer for quick, shareable workflow automation.
@@ -17,13 +22,28 @@ By the end of the workshop, participants should know when to use each approach, 
 
 ## Core Demo Material
 
-This workshop is grounded in the example plugin in the `dev/` workspace, which already demonstrates:
+This workshop is grounded in three companion documents and the matching demo assets:
 
-- Raster and vector layer handling.
-- UI-driven parameter selection.
-- Output generation as RGBA GeoTIFF plus legend CSV.
-- Packaging results into a ZIP file for sharing.
-- Dependency-heavy Python code using libraries such as NumPy, Rasterio, GDAL, and Pillow.
+- [QGIS-Manual.md](QGIS-Manual.md)
+- [QGIS-Model.md](QGIS-Model.md)
+- [QGIS-Plugin.md](QGIS-Plugin.md)
+
+The plugin demo now uses the `processing_demo/` workspace and demonstrates:
+
+- AOI selection.
+- Output CRS selection.
+- Vector or raster layer selection.
+- Dynamic layer details.
+- Raster band selection when needed.
+- Temporary output or saved output.
+
+The manual and model docs demonstrate the same workflow pattern:
+
+- Clip first in source CRS.
+- Reproject only the final clipped output.
+- For raster, select bands as the last step.
+
+The model doc also includes a bonus custom-script step using `validation_demo.py`.
 
 ## 2-Hour Agenda
 
@@ -51,7 +71,10 @@ This workshop is grounded in the example plugin in the `dev/` workspace, which a
 #### Milestone 1: Build a simple model
 
 - Open Model Designer.
-- Add a small workflow with a clear input and output.
+- Add an AOI polygon input.
+- Add either a vector or raster input.
+- Show clip-first, reproject-last behavior.
+- For raster, show band selection at the end.
 - Show how model steps can be chained without writing a full plugin.
 
 #### Milestone 2: Save and load the model
@@ -62,7 +85,8 @@ This workshop is grounded in the example plugin in the `dev/` workspace, which a
 
 #### Milestone 3: Add a Python step
 
-- Show how a custom Python script can be used as one step in the model.
+- Show how the `validation_demo.py` script can be used as one step in the model.
+- Explain how the custom script validates vector input before the main workflow.
 - Explain when this is enough and when it is not.
 
 #### Milestone 4: Discuss practical constraints
@@ -80,19 +104,19 @@ This workshop is grounded in the example plugin in the `dev/` workspace, which a
 
 #### Milestone 5: Inspect the plugin structure
 
-- Show the plugin scaffold in the example plugin folder under `dev/`.
-- Point out the main entry file, UI files, metadata, and tests.
+- Show the plugin scaffold in the `processing_demo/` folder.
+- Point out `processing_demo.py`, `processing_demo_dialog.py`, `processing_demo_dialog_base_ui.py`, metadata, and tests.
 - Explain how plugin packaging differs from a model file.
 
 #### Milestone 6: Walk through the plugin workflow
 
 - Open the plugin dialog.
-- Select a raster or vector layer.
-- Show how the plugin branches based on layer type.
-- Explain the output artifacts:
-  - RGBA TIFF.
-  - Legend CSV.
-  - ZIP package for sharing.
+- Select an AOI polygon.
+- Select an input vector or raster layer.
+- Show the layer details panel updating by layer type.
+- If raster is selected, show band selection.
+- Choose temporary output or save-to-file output.
+- Show the clip-first, final-reproject workflow.
 
 #### Milestone 7: Show the custom logic layer
 
@@ -100,14 +124,16 @@ This workshop is grounded in the example plugin in the `dev/` workspace, which a
 - Explain why a plugin is useful when you need:
   - Custom validation.
   - Dedicated UI.
-  - Multiple outputs.
+  - Multiple workflow branches.
   - Dependency management.
+  - A guided workshop-friendly interface.
 
 #### Milestone 8: Cover development setup
 
 - Explain the basic plugin development loop.
 - Show how UI and code work together.
-- Mention dependency handling and packaging for teammates.
+- Mention Plugin Builder 3, Plugin Reloader, and uv for dependencies.
+- Show the symlink-based reload loop for seamless local development.
 
 ### 1:40 - 1:55 Comparison and Decision Guide
 
@@ -124,8 +150,8 @@ This workshop is grounded in the example plugin in the `dev/` workspace, which a
 ## Milestone Summary
 
 1. Understand where Model Designer fits.
-2. Build and save a basic model.
-3. Add a Python step to a model.
+2. Build and save a basic model with AOI, vector/raster branching, and final reprojection.
+3. Add a custom validation script step to the model.
 4. Understand the plugin scaffold and runtime flow.
 5. Run a custom plugin workflow for raster and vector inputs.
 6. Compare both approaches and choose the right one for a use case.
@@ -133,11 +159,12 @@ This workshop is grounded in the example plugin in the `dev/` workspace, which a
 ## Suggested Demo Outcomes
 
 - A saved model that attendees can reuse immediately.
-- A working plugin walkthrough that turns layer input into a packaged output.
+- A working plugin walkthrough that turns layer input into a clipped, reprojected output.
 - A simple mental model for choosing between models and plugins.
 
 ## Presenter Notes
 
 - Keep the model section practical and fast so the plugin section still has enough time.
-- Use the plugin demo to show why custom UI and packaging matter.
+- Use the plugin demo to show why custom UI, validation, and output control matter.
 - If time gets tight, shorten the model scripting detail before shortening the plugin walkthrough.
+- Keep the bonus custom-script step as an optional stretch goal if the room is moving quickly.

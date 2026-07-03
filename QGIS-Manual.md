@@ -2,6 +2,11 @@
 
 ## Objective
 
+Demo data package:
+
+- Download the workshop sample data from <https://drive.google.com/file/d/1WvRVhR0BgKlhZuF5ebjVwKEUphy8UP8u/view?usp=sharing>
+- Use the downloaded layers as the starting inputs for this workflow.
+
 Starting layers in QGIS (all currently in EPSG:4326):
 
 - Greater London Boundary (AOI)

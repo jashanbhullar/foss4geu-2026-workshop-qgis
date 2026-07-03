@@ -2,6 +2,11 @@
 
 ## Goal
 
+Demo data package:
+
+- Download the workshop sample data from <https://drive.google.com/file/d/1WvRVhR0BgKlhZuF5ebjVwKEUphy8UP8u/view?usp=sharing>
+- Load those layers into QGIS before opening the plugin so the AOI and input layer choices are available.
+
 Build a simple workshop plugin in ./processing_demo named processing_demo.
 
 The plugin must:
@@ -86,6 +91,26 @@ The processing order must match the manual workflow:
 3. After each code change:
    - Use Plugin Reloader to reload processing_demo.
    - Reopen the plugin dialog and continue iterating.
+
+## Package as ZIP
+
+When you want to share the plugin with another machine or workshop attendee, build a ZIP package from the plugin folder:
+
+```bash
+cd processing_demo
+pb_tool zip
+```
+
+This creates `processing_demo.zip` in the plugin directory.
+
+## Install from ZIP in QGIS
+
+1. Open QGIS.
+2. Go to Plugins > Manage and Install Plugins.
+3. Open the Install from ZIP tab.
+4. Browse to the `processing_demo.zip` file.
+5. Click Install Plugin.
+6. Enable the plugin if needed.
 
 ## Symlink Setup for Seamless Loading
 
