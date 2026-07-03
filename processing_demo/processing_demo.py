@@ -1,3 +1,16 @@
+"""Main plugin entry point and processing workflow orchestration.
+
+This module wires the QGIS plugin lifecycle to a simple workshop workflow.
+The workflow applies the same conceptual processing chain for both vectors and
+rasters, with a type-specific algorithm branch:
+
+- Vector path: clip AOI first, then reproject clipped output.
+- Raster path: clip by AOI, warp/reproject, then select output bands.
+
+The implementation prioritizes readability for live teaching and hands-on
+modification over advanced configurability.
+"""
+
 import os.path
 
 from qgis import processing
@@ -19,7 +32,16 @@ from .processing_demo_dialog import processing_demoDialog
 
 
 class processing_demo:
-    """QGIS Plugin Implementation."""
+    """QGIS plugin implementation for the processing workshop.
+
+    This class is instantiated by QGIS through classFactory in __init__.py.
+    It is responsible for:
+    - adding/removing UI actions,
+    - opening and handling dialog interaction,
+    - dispatching processing algorithms,
+    - loading resulting layers into the current project,
+    - and reporting messages to users.
+    """
 
     def __init__(self, iface):
         """Constructor.
@@ -139,7 +161,11 @@ class processing_demo:
         return action
 
     def initGui(self):
-        """Create the menu entries and toolbar icons inside the QGIS GUI."""
+        """Create plugin action and register it with QGIS UI elements.
+
+        Adds one action to both toolbar and plugin menu, and marks this plugin
+        session as ready for first-time dialog construction in run().
+        """
 
         icon_path = os.path.join(os.path.dirname(__file__), "icon.png")
         self.add_action(
@@ -153,13 +179,17 @@ class processing_demo:
         self.first_start = True
 
     def unload(self):
-        """Removes the plugin menu item and icon from QGIS GUI."""
+        """Remove all plugin actions from menu and toolbar."""
         for action in self.actions:
             self.iface.removePluginMenu(self.tr("&processing_demo"), action)
             self.iface.removeToolBarIcon(action)
 
     def run(self):
-        """Run method that performs all the real work"""
+        """Open dialog, gather config, run workflow, and report status.
+
+        The dialog instance is created once per QGIS session and reused to
+        preserve responsiveness during iterative workshop runs.
+        """
 
         # Create the dialog with elements (after translation) and keep reference
         # Only create GUI ONCE in callback, so that it will only load when the plugin is started
@@ -182,6 +212,19 @@ class processing_demo:
                 self._log(f"Processing failed: {exc}", Qgis.Critical)
 
     def _run_workflow(self, config):
+        """Dispatch processing path by selected input layer type.
+
+        Parameters
+        ----------
+        config : dict
+            Dialog configuration containing AOI layer, input layer, target CRS,
+            raster bands, and output destination.
+
+        Raises
+        ------
+        ValueError
+            If the selected input layer is neither vector nor raster.
+        """
         aoi_layer = config["aoi_layer"]
         input_layer = config["input_layer"]
         target_crs = config["target_crs"]
@@ -217,6 +260,17 @@ class processing_demo:
     def _run_vector_workflow(
         self, aoi_layer, vector_layer, target_crs, output_destination
     ):
+        """Run vector processing chain in required pedagogical order.
+
+        Processing order:
+        1. native:clip against AOI into temporary output.
+        2. native:reprojectlayer as final output step.
+
+        Returns
+        -------
+        str | QgsMapLayer
+            Output reference returned by QGIS processing framework.
+        """
         self._log("Running vector branch: clip then final reprojection.")
         clipped = processing.run(
             "native:clip",
@@ -245,6 +299,18 @@ class processing_demo:
         selected_bands,
         output_destination,
     ):
+        """Run raster processing chain with band selection as final step.
+
+        Processing order:
+        1. gdal:cliprasterbymasklayer
+        2. gdal:warpreproject
+        3. gdal:translate with explicit -b arguments for selected bands
+
+        Returns
+        -------
+        str | QgsMapLayer
+            Output reference returned by QGIS processing framework.
+        """
         self._log("Running raster branch: clip, warp, then final band selection.")
 
         clipped = processing.run(
@@ -283,6 +349,13 @@ class processing_demo:
         return translated["OUTPUT"]
 
     def _add_output_layer(self, output, layer_name, is_raster):
+        """Add resulting layer to current project when possible.
+
+        Handles three output shapes commonly returned by processing.run:
+        - already materialized QgsMapLayer,
+        - temporary output marker,
+        - file path for raster/vector output.
+        """
         if isinstance(output, QgsMapLayer):
             QgsProject.instance().addMapLayer(output)
             return
@@ -302,6 +375,7 @@ class processing_demo:
             self._log(f"Could not load output layer from: {output}", Qgis.Warning)
 
     def _log(self, message, level=Qgis.Info):
+        """Write plugin messages to log panel and transient message bar."""
         QgsMessageLog.logMessage(message, "processing_demo", level)
         self.iface.messageBar().pushMessage(
             "processing_demo", message, level=level, duration=4

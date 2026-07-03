@@ -1,3 +1,16 @@
+"""Dialog behavior for the workshop processing plugin.
+
+This module implements the interactive logic for selecting:
+- an AOI polygon layer,
+- an input layer (vector or raster),
+- an output CRS,
+- optional raster band selection,
+- and output destination mode.
+
+The dialog is designed for workshop clarity rather than exhaustive options.
+It keeps behavior explicit and validates user choices before processing starts.
+"""
+
 from qgis.core import (
     QgsCoordinateReferenceSystem,
     QgsMapLayerType,
@@ -10,9 +23,25 @@ from .processing_demo_dialog_base_ui import Ui_processing_demoDialogBase
 
 
 class processing_demoDialog(QDialog, Ui_processing_demoDialogBase):
-    """Workshop dialog with minimal AOI/vector/raster controls."""
+    """Workshop dialog with AOI/input/output controls and validation.
+
+    Responsibilities
+    ----------------
+    - Populate combo boxes from current project layers.
+    - Keep AOI and input choices distinct.
+    - Expose human-readable layer metadata to the user.
+    - Validate configuration before accepting the dialog.
+    - Provide a normalized config dictionary consumed by plugin workflow code.
+    """
 
     def __init__(self, parent=None):
+        """Initialize widgets, defaults, and signal wiring.
+
+        Parameters
+        ----------
+        parent : QWidget | None
+            Optional parent widget passed by QGIS.
+        """
         super().__init__(parent)
         self.setupUi(self)
 
@@ -31,6 +60,12 @@ class processing_demoDialog(QDialog, Ui_processing_demoDialogBase):
         self._on_input_changed()
 
     def refresh_layers(self):
+        """Refresh layer caches and repopulate AOI and input selectors.
+
+        This method reads all layers currently loaded in the active QGIS
+        project, sorts them by name for predictable display, and updates
+        internal ID-to-layer mapping used by helper accessors.
+        """
         all_layers = list(QgsProject.instance().mapLayers().values())
         all_layers.sort(key=lambda lyr: lyr.name().lower())
         self._layers_by_id = {lyr.id(): lyr for lyr in all_layers}
@@ -46,6 +81,7 @@ class processing_demoDialog(QDialog, Ui_processing_demoDialogBase):
         self._populate_input_combo()
 
     def _populate_input_combo(self):
+        """Populate input-layer choices, excluding the selected AOI layer."""
         selected_aoi_id = self.aoi_combo.currentData() or ""
         self.input_layer_combo.blockSignals(True)
         self.input_layer_combo.clear()
@@ -58,14 +94,24 @@ class processing_demoDialog(QDialog, Ui_processing_demoDialogBase):
         self._on_input_changed()
 
     def _is_polygon_layer(self, layer):
+        """Return True when a layer is a vector polygon layer."""
         if layer.type() != QgsMapLayerType.VectorLayer:
             return False
         return layer.geometryType() == QgsWkbTypes.PolygonGeometry
 
     def _on_aoi_changed(self):
+        """React to AOI changes by rebuilding valid input choices."""
         self._populate_input_combo()
 
     def _on_input_changed(self):
+        """Update UI state and details panel after input-layer changes.
+
+        Behavior
+        --------
+        - Show raster band controls only for raster input layers.
+        - Show a guidance message when no input is selected.
+        - Display key metadata relevant to the selected layer type.
+        """
         layer = self.selected_input_layer()
         is_raster = bool(layer and layer.type() == QgsMapLayerType.RasterLayer)
         self.raster_bands_row.setVisible(is_raster)
@@ -97,11 +143,13 @@ class processing_demoDialog(QDialog, Ui_processing_demoDialogBase):
         self.layer_details_text.setPlainText("\n".join(details))
 
     def _on_output_mode_changed(self):
+        """Enable or disable output path controls by output mode."""
         save_to_file = self.output_mode_combo.currentText() == "Save to file"
         self.output_path_edit.setEnabled(save_to_file)
         self.output_browse_btn.setEnabled(save_to_file)
 
     def _on_browse_output(self):
+        """Open file chooser with filter based on selected input type."""
         layer = self.selected_input_layer()
         if layer and layer.type() == QgsMapLayerType.RasterLayer:
             flt = "GeoTIFF (*.tif *.tiff)"
@@ -117,12 +165,26 @@ class processing_demoDialog(QDialog, Ui_processing_demoDialogBase):
             self.output_path_edit.setText(output_path)
 
     def selected_aoi_layer(self):
+        """Return currently selected AOI layer object or None."""
         return self._layers_by_id.get(self.aoi_combo.currentData() or "")
 
     def selected_input_layer(self):
+        """Return currently selected input layer object or None."""
         return self._layers_by_id.get(self.input_layer_combo.currentData() or "")
 
     def selected_bands(self):
+        """Parse raster band text into a list of integer band indices.
+
+        Returns
+        -------
+        list[int]
+            Empty list when no text is provided.
+
+        Raises
+        ------
+        ValueError
+            If any token cannot be parsed as an integer.
+        """
         raw = self.raster_bands_edit.text().strip()
         if not raw:
             return []
@@ -134,11 +196,20 @@ class processing_demoDialog(QDialog, Ui_processing_demoDialogBase):
         return bands
 
     def output_destination(self):
+        """Return TEMPORARY_OUTPUT marker or selected output file path."""
         if self.output_mode_combo.currentText() == "Temporary layer":
             return "TEMPORARY_OUTPUT"
         return self.output_path_edit.text().strip()
 
     def get_config(self):
+        """Build normalized configuration consumed by processing workflow.
+
+        Returns
+        -------
+        dict
+            Dictionary with selected layers, CRS, raster bands, and output
+            destination in a shape expected by processing_demo._run_workflow.
+        """
         return {
             "aoi_layer": self.selected_aoi_layer(),
             "input_layer": self.selected_input_layer(),
@@ -148,6 +219,19 @@ class processing_demoDialog(QDialog, Ui_processing_demoDialogBase):
         }
 
     def _validate(self):
+        """Validate user selections before dialog acceptance.
+
+        Checks
+        ------
+        - AOI and input layer must be selected.
+        - Output file path is required in Save to file mode.
+        - Raster band values must exist and be in valid index range.
+
+        Raises
+        ------
+        ValueError
+            If any validation rule fails.
+        """
         aoi = self.selected_aoi_layer()
         input_layer = self.selected_input_layer()
 
@@ -176,6 +260,7 @@ class processing_demoDialog(QDialog, Ui_processing_demoDialogBase):
                 )
 
     def accept(self):
+        """Validate and accept dialog, or show warning message on failure."""
         try:
             self._validate()
         except Exception as exc:

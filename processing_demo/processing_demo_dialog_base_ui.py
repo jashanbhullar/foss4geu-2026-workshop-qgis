@@ -1,3 +1,18 @@
+"""UI scaffold for the workshop plugin dialog.
+
+This module defines a hand-written Qt widget tree instead of relying on a
+generated .ui conversion step. The goal is to keep the workshop code easy to
+read and easy to modify in plain Python.
+
+The dialog is organized into three main sections:
+1. A short instruction banner.
+2. An Inputs group with AOI, input layer, CRS, bands, and output controls.
+3. A Layer Details panel plus standard OK/Cancel actions.
+
+The logic and signal wiring are implemented in processing_demo_dialog.py.
+This module is intentionally limited to visual structure and widget creation.
+"""
+
 from qgis.gui import QgsProjectionSelectionWidget
 from qgis.PyQt.QtWidgets import (
     QComboBox,
@@ -22,6 +37,21 @@ class Ui_processing_demoDialogBase:
     """
 
     def setupUi(self, dialog):
+                """Build the full widget hierarchy for the plugin dialog.
+
+                Parameters
+                ----------
+                dialog : QDialog
+                        Parent dialog instance that receives all widgets and layouts.
+
+                Notes
+                -----
+                - The raster band controls are always created but may be hidden later
+                    by dialog logic depending on selected input layer type.
+                - Output controls support either temporary output or file output.
+                - This method should only construct UI. Validation and behavior belong
+                    in processing_demo_dialog.py.
+                """
         dialog.setWindowTitle("processing_demo")
         dialog.resize(680, 520)
 
