@@ -168,3 +168,25 @@ The model doc also includes a bonus custom-script step using `validation_demo.py
 - Use the plugin demo to show why custom UI, validation, and output control matter.
 - If time gets tight, shorten the model scripting detail before shortening the plugin walkthrough.
 - Keep the bonus custom-script step as an optional stretch goal if the room is moving quickly.
+
+## Sources
+
+### QGIS Documentation
+
+- QGIS Model Designer: <https://docs.qgis.org/latest/en/docs/user_manual/processing/modeler.html>
+- QGIS Plugins (PyQGIS Developer Cookbook): <https://docs.qgis.org/latest/en/docs/pyqgis_developer_cookbook/plugins/index.html>
+
+### uv Documentation
+
+- uv official docs: <https://docs.astral.sh/uv/>
+
+### Qt5 Documentation
+
+- Qt 5 documentation index: <https://doc.qt.io/qt-5/>
+
+### Additional Workshop References
+
+- YouTube: <https://www.youtube.com/watch?v=bK9Je14BXbI&pp=ygUTcWdpcyBtb2RlbCBkZXNpZ25lcg%3D%3D>
+- YouTube: <https://www.youtube.com/watch?v=axvuyA52yoU&pp=ygUTcWdpcyBtb2RlbCBkZXNpZ25lcg%3D%3D>
+- QGIS Tutorials (Python plugin): <https://www.qgistutorials.com/en/docs/3/building_a_python_plugin.html>
+- <https://spatialthoughts.com/2024/11/29/qgis-coditional-input-model/#more-14383>
