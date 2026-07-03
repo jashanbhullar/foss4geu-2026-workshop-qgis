@@ -1,0 +1,4 @@
+data/
+.DS_Store
+processing_demo/help
+processing_demo/__pycache__/
