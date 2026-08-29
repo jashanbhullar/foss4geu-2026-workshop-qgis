@@ -4,7 +4,9 @@
 
 Demo data package:
 
-- Download the workshop sample data from <https://drive.google.com/file/d/1WvRVhR0BgKlhZuF5ebjVwKEUphy8UP8u/view?usp=sharing>
+- Download the workshop sample data
+  - London: <https://drive.google.com/file/d/1WvRVhR0BgKlhZuF5ebjVwKEUphy8UP8u/view?usp=sharing>
+  - HiroshimaL: <https://drive.google.com/file/d/1hSJQtHoEyRJpVwgwSsyFrJF85mUPGQtL/view?usp=sharing>
 - Use it for both the Model Designer and plugin demos so attendees follow the same layers throughout the workshop.
 
 Help attendees understand two practical ways to automate GIS workflows in QGIS:
@@ -207,9 +209,10 @@ the workshop.
 
 These are additional workflow ideas beyond the AOI clip/reproject/band-select
 demo, suggested here to illustrate when each of the four approaches (manual,
-Model Designer, batch processing, plugin) is the natural fit. None of these
-are built in this repo - they are discussion prompts for extending the
-workshop.
+Model Designer, batch processing, plugin) is the natural fit. These are not
+part of the core 2-hour agenda, but working, verified demo code for all three
+exists in [notes/suggestions/](notes/suggestions/) if there's time left over
+and the room wants to go further.
 
 ### 1. Multi-city feature summary (easiest with a plugin)
 
@@ -227,6 +230,8 @@ user picks, and show a live summary table plus a bar chart in a dialog.
   combination on demand and render results as text/table/chart without
   re-running a whole pipeline.
 
+Demo code: [notes/suggestions/feature-summary-plugin/](notes/suggestions/feature-summary-plugin/)
+
 ### 2. Multi-tile / multi-date Sentinel-2 cloud-free mosaic (easiest with batch processing)
 
 Build a cloud-free composite for an AOI from several Sentinel-2 dates/tiles
@@ -243,6 +248,8 @@ Build a cloud-free composite for an AOI from several Sentinel-2 dates/tiles
 - Plugin: possible, but building custom UI for date range/cloud filtering is
   more effort than the value it adds over a script for a scripted/automatable task.
 
+Demo code: [notes/suggestions/cloud-free-mosaic-script/](notes/suggestions/cloud-free-mosaic-script/)
+
 ### 3. Vector QA / validation pipeline (easiest with Model Designer)
 
 Run a battery of checks on any vector layer before it's used downstream:
@@ -251,7 +258,7 @@ feature count.
 
 - Manual: tedious - each check must be re-run and re-verified by hand for every
   new layer.
-- Model Designer: easiest - chain built-in `native:checkvalidity`,
+- Model Designer: easiest - chain built-in `qgis:checkvalidity`,
   `native:fixgeometries`, and a custom validation script (like
   `scripts/validation_demo.py`) into one reusable, low-code model attendees
   can hand to teammates who don't write Python.
@@ -260,6 +267,8 @@ feature count.
   still the easiest place to build and adjust the checks.
 - Plugin: overkill for a linear check-then-report workflow with no need for
   a bespoke UI.
+
+Demo code: [notes/suggestions/vector-qa-model/](notes/suggestions/vector-qa-model/)
 
 ## Presenter Notes
 
