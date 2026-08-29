@@ -169,7 +169,7 @@ This section shows how to include a custom Processing script as a validation ste
 
 Reference script:
 
-- validation_demo.py
+- scripts/validation_demo.py
 - Algorithm class: CheckNameField
 - Behavior: validates that input vector layer has a field named name
 
@@ -177,7 +177,7 @@ Reference script:
 
 1. Open Processing Toolbox.
 2. Go to Processing > Options > Scripts.
-3. Add the folder that contains validation_demo.py to Script folders.
+3. Add the `scripts/` folder (containing validation_demo.py) to Script folders.
 4. Click OK.
 5. In Processing Toolbox, search for Check if "name" field exists under Custom scripts.
 

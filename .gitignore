@@ -1,4 +1,5 @@
 data/
 .DS_Store
 processing_demo/help
-processing_demo/__pycache__/
+**/__pycache__/
+notes/
