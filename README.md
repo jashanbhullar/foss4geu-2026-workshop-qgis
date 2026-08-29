@@ -6,15 +6,15 @@ Demo data package:
 
 - Download the workshop sample data
   - London: <https://drive.google.com/file/d/1WvRVhR0BgKlhZuF5ebjVwKEUphy8UP8u/view?usp=sharing>
-  - HiroshimaL: <https://drive.google.com/file/d/1hSJQtHoEyRJpVwgwSsyFrJF85mUPGQtL/view?usp=sharing>
+  - Hiroshima: <https://drive.google.com/file/d/1hSJQtHoEyRJpVwgwSsyFrJF85mUPGQtL/view?usp=sharing>
 - Use it for both the Model Designer and plugin demos so attendees follow the same layers throughout the workshop.
 
-Help attendees understand two practical ways to automate GIS workflows in QGIS:
+Help understand two practical ways to automate GIS workflows in QGIS:
 
 - QGIS Model Designer for quick, shareable workflow automation.
 - QGIS Plugin Development for custom, reusable application behavior.
 
-By the end of the workshop, participants should know when to use each approach, what they have in common, and how to start building both.
+By the end of the workshop, one should know when to use each approach, what they have in common, and how to start building both.
 
 ## Audience
 
@@ -36,7 +36,7 @@ This workshop is grounded in three companion documents and the matching demo ass
 - `scripts/validation_demo.py` - the custom Processing script (`CheckNameField`) used as the bonus validation step in the model.
 - `processing_demo/` - the full plugin scaffold used in Part 2.
 - `data/london/` - demo datasets for London (AOI boundary, OSM points/lines/polygons, Sentinel-2 all-bands raster).
-- `data/hiroshima/` - the same demo datasets for Hiroshima. See [notes/hiroshima-data/README.md](notes/hiroshima-data/README.md) for how this data was generated and how to regenerate it.
+- `data/hiroshima/` - the same demo datasets for Hiroshima.
 
 The plugin demo now uses the `processing_demo/` workspace and demonstrates:
 
@@ -55,9 +55,9 @@ The manual and model docs demonstrate the same workflow pattern:
 
 The model doc also includes a bonus custom-script step using `scripts/validation_demo.py`.
 
-## 2-Hour Agenda
+## Agenda
 
-### 0:00 - 0:10 Introduction
+### Introduction
 
 - Introduce the problem: repeating manual GIS work is slow and error-prone.
 - Explain the workshop structure.
@@ -65,7 +65,7 @@ The model doc also includes a bonus custom-script step using `scripts/validation
   - Model Designer for orchestration.
   - Plugin Development for custom UI and logic.
 
-### 0:10 - 0:20 Similarities and Differences
+### Similarities and Differences
 
 - Similarities:
   - Both automate QGIS workflows.
@@ -76,7 +76,7 @@ The model doc also includes a bonus custom-script step using `scripts/validation
   - Plugins are better when you need custom UI, custom validation, and richer packaging.
   - Models are faster to build; plugins are more flexible.
 
-### 0:20 - 0:55 Part 1: QGIS Model Designer First
+### Part 1: QGIS Model Designer First
 
 #### Milestone 1: Build a simple model
 
@@ -105,12 +105,12 @@ The model doc also includes a bonus custom-script step using `scripts/validation
 - Good for linear workflows.
 - Best when the main requirement is repeatability, not a custom product.
 
-### 0:55 - 1:00 Transition
+### Transition
 
 - Summarize what Model Designer solved well.
 - Frame the next section as the path for when a model is not enough.
 
-### 1:00 - 1:40 Part 2: QGIS Plugin Development
+### Part 2: QGIS Plugin Development
 
 #### Milestone 5: Inspect the plugin structure
 
@@ -145,13 +145,13 @@ The model doc also includes a bonus custom-script step using `scripts/validation
 - Mention Plugin Builder 3, Plugin Reloader, and uv for dependencies.
 - Show the symlink-based reload loop for seamless local development.
 
-### 1:40 - 1:55 Comparison and Decision Guide
+### Comparison and Decision Guide
 
 - Use Model Designer when the workflow is mostly a chain of existing tools.
 - Use a plugin when users need a guided application-like experience.
 - Use both together when the model is the workflow engine and the plugin is the front door.
 
-### 1:55 - 2:00 Wrap-Up
+### Wrap-Up
 
 - Recap the decision points.
 - Invite questions.
@@ -175,18 +175,17 @@ being run one dataset at a time through the Model Designer or plugin dialog.
 
 - Right-click the model in the Processing Toolbox and choose "Run as Batch
   Process...".
-- Add one row per AOI/input pair (for example, one row for the London
-  datasets in `data/london/` and one row for the Hiroshima datasets in
-  `data/hiroshima/`) and set the outputs; QGIS iterates the model input by
-  input.
+- Add one row per AOI/input pair (for example, one row for `data/hiroshima/`
+  and one row for any other city's dataset you add under `data/`) and set the
+  outputs; QGIS iterates the model input by input.
 - This is the primary way this workshop covers batch processing, since the
   workshop is focused on the QGIS GUI.
 
 ### Note: a command-line option also exists
 
 `qgis_process run` (bundled with QGIS Desktop) can call the same model
-headlessly from a script or CI job, which is worth mentioning to attendees who
-ask about automating batch runs outside QGIS. This is not covered hands-on in
+headlessly from a script or CI job, which is worth mentioning who are interested
+in automating batch runs outside QGIS. This is not covered hands-on in
 the workshop.
 
 ## Milestone Summary

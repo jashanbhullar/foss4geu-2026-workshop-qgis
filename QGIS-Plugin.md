@@ -2,11 +2,6 @@
 
 ## Goal
 
-Demo data package:
-
-- Download the workshop sample data from <https://drive.google.com/file/d/1WvRVhR0BgKlhZuF5ebjVwKEUphy8UP8u/view?usp=sharing>
-- Load those layers into QGIS before opening the plugin so the AOI and input layer choices are available.
-
 Build a simple workshop plugin in ./processing_demo named processing_demo.
 
 The plugin must:

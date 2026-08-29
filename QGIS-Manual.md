@@ -2,20 +2,15 @@
 
 ## Objective
 
-Demo data package:
-
-- Download the workshop sample data from <https://drive.google.com/file/d/1WvRVhR0BgKlhZuF5ebjVwKEUphy8UP8u/view?usp=sharing>
-- Use the downloaded layers as the starting inputs for this workflow.
-
 Starting layers in QGIS (all currently in EPSG:4326):
 
-- Greater London Boundary (AOI)
-- OSM London Points
-- OSM London Lines
-- OSM London Polygons
-- London Sentinel 2 Raster with bands B1 to B12
+- A Boundary Layer (AOI)
+- OSM Points
+- OSM Lines
+- OSM Polygons
+- Sentinel 2 Raster with bands B1 to B12
 
-Create 4 outputs in EPSG:8857:
+Create 4 outputs in EPSG:8857 / EPSG:4612 / EPSG:6668:
 
 1. OSM Points inside AOI
 2. OSM Lines inside AOI
@@ -26,9 +21,9 @@ Create 4 outputs in EPSG:8857:
 
 1. Open QGIS and load all layers.
 2. Keep layers in their source CRS (EPSG:4326) for clipping.
-3. Optional for display consistency: set Project CRS to EPSG:4326.
+3. Optional for display consistency: set Project CRS to your choice..
 
-Use the original Greater London Boundary layer as AOI for all clipping steps.
+Use the original Boundary layer as AOI for all clipping steps.
 
 ## Part B - Vector Outputs (Points, Lines, Polygons)
 
@@ -36,40 +31,40 @@ Use the original Greater London Boundary layer as AOI for all clipping steps.
 
 1. Clip points with AOI in EPSG:4326:
    - Processing Toolbox > Clip
-   - Input layer: OSM London Points
-   - Overlay layer: Greater London Boundary
-   - Output: OSM_London_Points_AOI_4326.gpkg
+   - Input layer: OSM  Points
+   - Overlay layer: Boundary
+   - Output: OSM_Points_AOI_4326.gpkg
 2. Reproject final clipped points to EPSG:8857:
    - Processing Toolbox > Reproject layer
-   - Input: OSM_London_Points_AOI_4326
+   - Input: OSM_Points_AOI_4326
    - Target CRS: EPSG:8857
-   - Output: OSM_London_Points_AOI_8857.gpkg
+   - Output: OSM_Points_AOI_8857.gpkg
 
 ### Output 2: OSM Lines inside AOI (EPSG:8857)
 
 1. Clip lines with AOI in EPSG:4326:
    - Processing Toolbox > Clip
-   - Input layer: OSM London Lines
-   - Overlay layer: Greater London Boundary
-   - Output: OSM_London_Lines_AOI_4326.gpkg
+   - Input layer: OSM Lines
+   - Overlay layer: Greater Boundary
+   - Output: OSM_Lines_AOI_4326.gpkg
 2. Reproject final clipped lines to EPSG:8857:
    - Processing Toolbox > Reproject layer
-   - Input: OSM_London_Lines_AOI_4326
+   - Input: OSM_Lines_AOI_4326
    - Target CRS: EPSG:8857
-   - Output: OSM_London_Lines_AOI_8857.gpkg
+   - Output: OSM_Lines_AOI_8857.gpkg
 
 ### Output 3: OSM Polygons inside AOI (EPSG:8857)
 
 1. Clip polygons with AOI in EPSG:4326:
    - Processing Toolbox > Clip
-   - Input layer: OSM London Polygons
-   - Overlay layer: Greater London Boundary
-   - Output: OSM_London_Polygons_AOI_4326.gpkg
+   - Input layer: OSM Polygons
+   - Overlay layer: Greater Boundary
+   - Output: OSM_Polygons_AOI_4326.gpkg
 2. Reproject final clipped polygons to EPSG:8857:
    - Processing Toolbox > Reproject layer
-   - Input: OSM_London_Polygons_AOI_4326
+   - Input: OSM_Polygons_AOI_4326
    - Target CRS: EPSG:8857
-   - Output: OSM_London_Polygons_AOI_8857.gpkg
+   - Output: OSM_Polygons_AOI_8857.gpkg
 
 ## Part C - Raster Output (Sentinel RGB B1/B2/B3)
 
@@ -77,8 +72,8 @@ Use the original Greater London Boundary layer as AOI for all clipping steps.
 
 1. Clip source raster by AOI in EPSG:4326:
    - Processing Toolbox > Clip raster by mask layer
-   - Input layer: London Sentinel 2 raster
-   - Mask layer: Greater London Boundary
+   - Input layer: Sentinel 2 raster
+   - Mask layer: Greater Boundary
    - Match extent to mask layer: checked
    - Keep resolution: checked (or set explicit resolution if needed)
    - Output: Sentinel_AOI_4326.tif
