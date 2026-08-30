@@ -38,13 +38,13 @@ LOCALES =
 # translation
 SOURCES = \
 	__init__.py \
-	processing_demo.py processing_demo_dialog.py
+	processing_demo.py processing_demo_dialog.py processing_demo_dialog_base_ui.py
 
 PLUGINNAME = processing_demo
 
 PY_FILES = \
 	__init__.py \
-	processing_demo.py processing_demo_dialog.py
+	processing_demo.py processing_demo_dialog.py processing_demo_dialog_base_ui.py
 
 UI_FILES = processing_demo_dialog_base.ui
 
@@ -108,12 +108,12 @@ deploy: transcompile doc
 	@echo "------------------------------------------"
 	@echo "Deploying plugin to your QGIS plugins directory."
 	@echo "------------------------------------------"
-	mkdir -p $(QGISDIR)/$(PLUGINNAME)
-	cp -vf $(PY_FILES) $(QGISDIR)/$(PLUGINNAME)
-	$(if $(UI_FILES), cp -vf $(UI_FILES) $(QGISDIR)/$(PLUGINNAME))
-	cp -vf $(EXTRAS) $(QGISDIR)/$(PLUGINNAME)
-	cp -vfr i18n $$(HOME)/$$(QGISDIR)/python/plugins/$$(PLUGINNAME)
-	cp -vfr $$(HELP) $$(HOME)/$$(QGISDIR)/python/plugins/$$(PLUGINNAME)/help
+	mkdir -p "$(QGISDIR)/$(PLUGINNAME)"
+	cp -vf $(PY_FILES) "$(QGISDIR)/$(PLUGINNAME)"
+	$(if $(UI_FILES), cp -vf $(UI_FILES) "$(QGISDIR)/$(PLUGINNAME)")
+	cp -vf $(EXTRAS) "$(QGISDIR)/$(PLUGINNAME)"
+	cp -vfr i18n "$(QGISDIR)/$(PLUGINNAME)"
+	cp -vfr $(HELP) "$(QGISDIR)/$(PLUGINNAME)/help"
 	# Copy extra directories if any
 	$(if $(EXTRA_DIRS), $(foreach EXTRA_DIR,$(EXTRA_DIRS), cp -R $(EXTRA_DIR) $(QGISDIR)/$(PLUGINNAME)/;))
 
