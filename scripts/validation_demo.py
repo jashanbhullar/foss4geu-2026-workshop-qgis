@@ -1,42 +1,46 @@
-from qgis.PyQt.QtCore import QCoreApplication
 from qgis.core import (
     QgsProcessing,
     QgsProcessingAlgorithm,
+    QgsProcessingException,
     QgsProcessingParameterFeatureSource,
-    QgsProcessingException
 )
+from qgis.PyQt.QtCore import QCoreApplication
 
 
 class CheckNameField(QgsProcessingAlgorithm):
-    INPUT = 'INPUT'
+    INPUT = "INPUT"
 
     def tr(self, text):
-        return QCoreApplication.translate('Processing', text)
+        return QCoreApplication.translate("Processing", text)
 
     def createInstance(self):
         return CheckNameField()
 
     def name(self):
-        return 'check_name_field'
+        return "check_name_field"
 
     def displayName(self):
-        return self.tr('Check if "name" field exists')
+        return self.tr(
+            'Checking if script reloads if "non-existent-field" field exists'
+        )
 
     def group(self):
-        return self.tr('Custom scripts')
+        return self.tr("Custom scripts")
 
     def groupId(self):
-        return 'customscripts'
+        return "customscripts"
 
     def shortHelpString(self):
-        return self.tr('Checks whether the input vector layer contains a field named "name".')
+        return self.tr(
+            'Checks whether the input vector layer contains a field named "name".'
+        )
 
     def initAlgorithm(self, config=None):
         self.addParameter(
             QgsProcessingParameterFeatureSource(
                 self.INPUT,
-                self.tr('Input vector layer'),
-                [QgsProcessing.TypeVectorAnyGeometry]
+                self.tr("Input vector layer"),
+                [QgsProcessing.TypeVectorAnyGeometry],
             )
         )
 
@@ -44,14 +48,20 @@ class CheckNameField(QgsProcessingAlgorithm):
         source = self.parameterAsSource(parameters, self.INPUT, context)
 
         if source is None:
-            raise QgsProcessingException(self.invalidSourceError(parameters, self.INPUT))
+            raise QgsProcessingException(
+                self.invalidSourceError(parameters, self.INPUT)
+            )
 
         field_names = [field.name() for field in source.fields()]
 
-        if 'name' not in field_names:
+        if "non_existent_field" not in field_names:
             raise QgsProcessingException(
-                self.tr('Input layer does not contain a field named "name".')
+                self.tr(
+                    'Input layer does not contain a field named "non_existent_field".'
+                )
             )
 
-        feedback.pushInfo(self.tr('Field "name" exists in the input layer.'))
+        feedback.pushInfo(
+            self.tr('Field "non_existent_field" exists in the input layer.')
+        )
         return {}
