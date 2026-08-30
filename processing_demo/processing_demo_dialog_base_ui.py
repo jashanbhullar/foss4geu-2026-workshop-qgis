@@ -37,21 +37,21 @@ class Ui_processing_demoDialogBase:
     """
 
     def setupUi(self, dialog):
-                """Build the full widget hierarchy for the plugin dialog.
+        """Build the full widget hierarchy for the plugin dialog.
 
-                Parameters
-                ----------
-                dialog : QDialog
-                        Parent dialog instance that receives all widgets and layouts.
+        Parameters
+        ----------
+        dialog : QDialog
+            Parent dialog instance that receives all widgets and layouts.
 
-                Notes
-                -----
-                - The raster band controls are always created but may be hidden later
-                    by dialog logic depending on selected input layer type.
-                - Output controls support either temporary output or file output.
-                - This method should only construct UI. Validation and behavior belong
-                    in processing_demo_dialog.py.
-                """
+        Notes
+        -----
+        - The raster band controls are always created but may be hidden later
+          by dialog logic depending on selected input layer type.
+        - Output controls support either temporary output or file output.
+        - This method should only construct UI. Validation and behavior belong
+          in processing_demo_dialog.py.
+        """
         dialog.setWindowTitle("processing_demo")
         dialog.resize(680, 520)
 
